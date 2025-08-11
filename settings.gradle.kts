@@ -49,3 +49,7 @@ include(":lib:compose")
 include(":lib:kotlin")
 include(":lib:native")
 include(":lib:snygg")
+
+// Include Khmer Transliterator Core module
+include(":transliterator-core")
+project(":transliterator-core").projectDir = file("../transliterator-core")

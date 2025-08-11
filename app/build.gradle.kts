@@ -45,12 +45,12 @@ android {
     ndkVersion = tools.versions.ndk.get()
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
         freeCompilerArgs = listOf(
             "-opt-in=kotlin.contracts.ExperimentalContracts",
             "-Xjvm-default=all-compatibility",
@@ -180,6 +180,9 @@ dependencies {
     implementation(composeBom)
     // testImplementation(composeBom)
     // androidTestImplementation(composeBom)
+
+    // Khmer Transliterator Integration
+    implementation(project(":transliterator-core"))
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.activity.ktx)

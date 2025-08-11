@@ -30,8 +30,10 @@ import dev.patrickgold.florisboard.ime.editor.EditorContent
 import dev.patrickgold.florisboard.ime.editor.EditorRange
 import dev.patrickgold.florisboard.ime.media.emoji.EmojiSuggestionProvider
 import dev.patrickgold.florisboard.ime.nlp.han.HanShapeBasedLanguageProvider
+import dev.patrickgold.florisboard.ime.nlp.KhmerSuggestionProvider
 import dev.patrickgold.florisboard.ime.nlp.latin.LatinLanguageProvider
 import dev.patrickgold.florisboard.keyboardManager
+import dev.patrickgold.florisboard.lib.devtools.flogDebug
 import dev.patrickgold.florisboard.lib.util.NetworkUtils
 import dev.patrickgold.florisboard.subtypeManager
 import kotlinx.coroutines.CoroutineScope
@@ -67,6 +69,7 @@ class NlpManager(context: Context) {
         mapOf(
             LatinLanguageProvider.ProviderId to ProviderInstanceWrapper(LatinLanguageProvider(context)),
             HanShapeBasedLanguageProvider.ProviderId to ProviderInstanceWrapper(HanShapeBasedLanguageProvider(context)),
+            KhmerSuggestionProvider.PROVIDER_ID to ProviderInstanceWrapper(KhmerSuggestionProvider(context)),
         )
     }
     // lock unnecessary because values constant
@@ -134,7 +137,12 @@ class NlpManager(context: Context) {
     }
 
     private suspend fun getSuggestionProvider(subtype: Subtype): SuggestionProvider {
-        return providers.withLock { it[subtype.nlpProviders.suggestion] }?.provider as? SuggestionProvider
+        // For testing: Use Khmer provider for ANY subtype to test the integration
+        // TODO: Later, change this back to only km subtypes
+        val providerId = KhmerSuggestionProvider.PROVIDER_ID
+        flogDebug { "Using KhmerSuggestionProvider for testing with subtype: ${subtype.primaryLocale.languageTag()}" }
+
+        return providers.withLock { it[providerId] }?.provider as? SuggestionProvider
             ?: FallbackNlpProvider
     }
 
